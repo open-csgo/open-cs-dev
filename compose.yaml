@@ -1,0 +1,42 @@
+name: open-cs-dev
+
+services:
+  server:
+    image: ghcr.io/luanti-org/luanti:5.18.0
+    entrypoint: ["/bin/sh", "/opt/open-cs/server_entrypoint.sh"]
+    ports:
+      - "${OPEN_CS_BIND_ADDRESS:-127.0.0.1}:${OPEN_CS_PORT:-30000}:30000/udp"
+    volumes:
+      - server-data:/var/lib/minetest
+      - type: bind
+        source: ../open-cs
+        target: /usr/local/share/luanti/games/open-cs
+        read_only: true
+        bind:
+          create_host_path: false
+          selinux: z
+      - type: bind
+        source: ./server_config.conf
+        target: /etc/minetest/minetest.conf
+        read_only: true
+        bind:
+          create_host_path: false
+          selinux: z
+      - type: bind
+        source: ./server_world
+        target: /opt/open-cs/world-template
+        read_only: true
+        bind:
+          create_host_path: false
+          selinux: z
+      - type: bind
+        source: ./server_entrypoint.sh
+        target: /opt/open-cs/server_entrypoint.sh
+        read_only: true
+        bind:
+          create_host_path: false
+          selinux: z
+    stop_grace_period: 20s
+
+volumes:
+  server-data:

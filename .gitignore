@@ -1,2 +1,5 @@
-server_build/minetest
-client_build/minetest
+/client_build/*
+!/client_build/.gitkeep
+/.clients/
+# Legacy engine checkouts may still exist locally.
+/server_build/
